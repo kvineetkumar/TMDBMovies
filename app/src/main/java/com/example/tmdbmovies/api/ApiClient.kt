@@ -11,6 +11,8 @@ class ApiClient {
     companion object {
         private val BASE_URL =
             "https://api.themoviedb.org/3/movie/"
+
+        val IMAGE_URL = "https://image.tmdb.org/t/p/w500/"
         val API_KEY = "3c7aa4e2134f3d58ed766df82c4353d0"
 
         fun getClient(): MovieApi {
