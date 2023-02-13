@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso
 class MovieAdapter() :
     RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
-    private var movies: List<Movie> = emptyList()
+    private var movies: MutableList<Movie> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         return MovieViewHolder(
@@ -30,14 +30,16 @@ class MovieAdapter() :
     override fun getItemCount(): Int = movies.size
 
     fun updateAll(movies: List<Movie>) {
-        this.movies = movies
-        notifyDataSetChanged()
+        val prevLastIndex = this.movies.size
+        val isFirstTime = this.movies.size == 0
+        this.movies.addAll(movies)
+        this.movies = this.movies.toSet().toMutableList()
+        notifyItemRangeChanged(if (isFirstTime) 0 else prevLastIndex, this.movies.size)
     }
 
     class MovieViewHolder(private val binding: ItemMovieRecyclerviewBinding) :
         ViewHolder(binding.root) {
         fun bind(movie: Movie) {
-            binding.titleTextview.text = movie.title
             Picasso.get().load(ApiClient.IMAGE_URL.plus(movie.posterPath))
                 .into(binding.posterImageview)
         }

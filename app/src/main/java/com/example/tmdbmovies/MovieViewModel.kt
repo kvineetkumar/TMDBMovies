@@ -12,12 +12,14 @@ import kotlinx.coroutines.launch
 class MovieViewModel : ViewModel() {
 
     val moviesLiveData = MutableLiveData<List<Movie>>()
+    var totalPages = 0
     private val movieApi: MovieApi = ApiClient.getClient()
 
-    fun getMovies() {
+    fun getMovies(page: Int = 1) {
         CoroutineScope(Dispatchers.IO).launch {
-            val movieListResponse = movieApi.getPopularMovies(1)
-            moviesLiveData.postValue(movieListResponse?.results)
+            val movieListResponse = movieApi.getPopularMovies(page)
+            totalPages = movieListResponse?.totalPages!!
+            moviesLiveData.postValue(movieListResponse.results)
         }
     }
 }

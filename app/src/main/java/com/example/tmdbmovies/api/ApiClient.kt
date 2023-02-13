@@ -15,11 +15,15 @@ class ApiClient {
         val IMAGE_URL = "https://image.tmdb.org/t/p/w500/"
         val API_KEY = "3c7aa4e2134f3d58ed766df82c4353d0"
 
+        private val CACHE_DISK_SIZE = 10 * 1024 * 1024
+
         fun getClient(): MovieApi {
             val context = TMDBApplication.instance.applicationContext
 
-            val cacheSize = (5 * 1024 * 1024).toLong()
+            val cacheSize = (CACHE_DISK_SIZE).toLong()
             val cacheDir = Cache(context.cacheDir, cacheSize)
+
+            if (NetworkUtil.isNetworkConnected(context)) cacheDir.directory.deleteRecursively()
 
             val okhttpClient = OkHttpClient.Builder()
                 .cache(cacheDir)
